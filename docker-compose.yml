@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   db:
     image: "postgres:11"
@@ -12,6 +13,17 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - my_dbdata:/var/lib/postgresql/data
+      - databases:/var/lib/postgresql/data
+
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodb
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - databases:/data/mongodb
+
 volumes:
-  my_dbdata:
+  databases:

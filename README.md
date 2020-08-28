@@ -13,8 +13,8 @@ $ yarn install
 # Setup
 $ yarn setup
 
-# Run postgres using docker
-$ yarn pg
+# Run postgres and mongodb using docker
+$ yarn db:up
 
 # Run the server for development
 $ yarn watch
