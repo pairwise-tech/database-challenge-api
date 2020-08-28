@@ -19,7 +19,8 @@
     "test:unit": "jest",
     "test:watch": "jest --watch",
     "test": "yarn format && yarn test:unit",
-    "pg": "docker-compose up -d"
+    "pg": "docker-compose up -d",
+    "pg:down": "docker-compose down"
   },
   "dependencies": {
     "@types/cors": "^2.8.6",
