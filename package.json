@@ -1,6 +1,6 @@
 {
-  "name": "pairwise-example-http-api",
-  "description": "An example HTTP API for the Pairwise Async Challenges",
+  "name": "pairwise-database-challenge-api",
+  "description": "An HTTP server equipped to run SQL queries for Pairwise database challenges.",
   "version": "1.0.0",
   "main": "build/app.js",
   "private": true,
