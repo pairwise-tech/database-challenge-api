@@ -120,6 +120,8 @@ const PORT = process.env.SERVER_PORT || 5000;
 
   // Start the server
   app.listen(PORT, () => {
-    console.log(`Pairwise HTTP API is running on http://localhost:${PORT}\n`);
+    console.log(
+      `✨ Pairwise Database Challenge API is running on http://localhost:${PORT} ✨\n`
+    );
   });
 })();
