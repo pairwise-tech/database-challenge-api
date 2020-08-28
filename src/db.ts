@@ -10,14 +10,14 @@ CREATE TABLE IF NOT EXISTS users (
   created_on DATE NOT NULL
 )`;
 
-export const initializeDatabasePool = async () => {
+export const initializeDatabasePool = () => {
   const pool = new Pool();
 
   pool.on("connect", () => {
     console.log("Connected to Postgres!");
   });
 
-  const query = async (queryText: any, params?: any) => {
+  const query = async (queryText: string, params?: any[]) => {
     try {
       const result = await pool.query(queryText, params);
       return result;
@@ -27,9 +27,13 @@ export const initializeDatabasePool = async () => {
     }
   };
 
+  return { pool, query };
+};
+
+export const setupTables = async (
+  query: (queryText: string, params?: any[]) => Promise<any>
+) => {
   // Create Users Table
   await query(dropUserTable);
   await query(createUserTable);
-
-  return { pool, query };
 };

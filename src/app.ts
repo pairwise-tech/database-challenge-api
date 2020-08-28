@@ -4,14 +4,16 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { initializeDatabasePool } from "./db";
+import { setupTables, initializeDatabasePool } from "./db";
 
 /** ===========================================================================
  * Types & Config
  * ============================================================================
  */
 
-initializeDatabasePool();
+const { query, pool } = initializeDatabasePool();
+
+setupTables(query);
 
 /** ===========================================================================
  * Setup Server
@@ -34,10 +36,22 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 /**
- * GET
+ * POST query
  */
-app.get("/api", (req: Request, res: Response) => {
-  res.send("Got a GET request at /api 🎉");
+app.post("/query", async (req: Request, res: Response) => {
+  const { sql } = req.body;
+  if (!sql) {
+    res.status(400);
+    res.send("Must provide a sql query field in the JSON POST body.");
+  }
+
+  try {
+    const result = await query(sql);
+    res.json(result);
+  } catch (err) {
+    res.status(400);
+    res.send(`Error executing query: ${err}`);
+  }
 });
 
 /**
