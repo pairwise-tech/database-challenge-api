@@ -4,14 +4,14 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { connectPool } from "./db";
+import { initializeDatabasePool } from "./db";
 
 /** ===========================================================================
  * Types & Config
  * ============================================================================
  */
 
-const { query, pool } = connectPool();
+initializeDatabasePool();
 
 /** ===========================================================================
  * Setup Server
