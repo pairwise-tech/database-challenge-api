@@ -6,9 +6,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { connectPoolAndQuery, setupPostgres } from "./postgres";
 import { setupMongoDB, handleUsersQuery } from "./mongodb";
+import { POSTGRES_LOCK, wait, MONGO_LOCK } from "./utils";
 
 /** ===========================================================================
- * Setup Server
+ * Setup Server & API Endpoints
  * ============================================================================
  */
 
@@ -34,18 +35,33 @@ app.get("/", (req: Request, res: Response) => {
  * back transactions to leave the database unchanged.
  */
 app.post("/postgres/query", async (req: Request, res: Response) => {
-  const { userSQL, testSQL } = req.body;
-  if (!userSQL || !testSQL) {
+  const { userSQL, preSQL, postSQL } = req.body;
+  if (!userSQL) {
     return res.status(400).send("Invalid body provided.");
   }
 
-  try {
-    console.log("-> Executing queries for challenges.");
-    const result = await connectPoolAndQuery(userSQL, testSQL);
-    return res.json(result);
-  } catch (err) {
-    return res.status(400).send(`Error executing query: ${err}`);
-  }
+  /**
+   * Execute the query, waiting if the database is locked.
+   */
+  const execute = async (): Promise<any> => {
+    try {
+      if (POSTGRES_LOCK.isLocked()) {
+        // Wait 1 second and retry
+        await wait();
+        return execute();
+      }
+
+      POSTGRES_LOCK.lock();
+      const result = await connectPoolAndQuery(userSQL, preSQL, postSQL);
+      POSTGRES_LOCK.unlock();
+      return res.json(result);
+    } catch (err) {
+      POSTGRES_LOCK.unlock();
+      return res.status(400).send(`Error executing query: ${err}`);
+    }
+  };
+
+  return execute();
 });
 
 /**
@@ -59,13 +75,30 @@ app.post("/mongodb/query", async (req: Request, res: Response) => {
     return res.status(400).send("Invalid body provided.");
   }
 
-  try {
-    const client = app.get("mongo");
-    const result = await handleUsersQuery(client, args);
-    return res.json(result);
-  } catch (err) {
-    return res.status(400).send(`Error executing query: ${err}`);
-  }
+  /**
+   * Execute the query, waiting if the database is locked.
+   */
+  const execute = async (): Promise<any> => {
+    try {
+      if (MONGO_LOCK.isLocked()) {
+        // Wait 1 second and retry
+        await wait();
+        return execute();
+      }
+
+      MONGO_LOCK.lock();
+
+      const client = app.get("mongo");
+      const result = await handleUsersQuery(client, args);
+      MONGO_LOCK.unlock();
+      return res.json(result);
+    } catch (err) {
+      MONGO_LOCK.unlock();
+      return res.status(400).send(`Error executing query: ${err}`);
+    }
+  };
+
+  return execute();
 });
 
 /** ===========================================================================

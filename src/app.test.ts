@@ -14,13 +14,16 @@ describe.skip("Placeholder test suite...", () => {
  */
 describe("Example Database Challenge Test", () => {
   test("A user named Ryan with email ryan@mail.com should be created using a SQL INSERT INTO statement.", async () => {
-    const executePostgresQuery = async (userSQL: string, testSQL: string) => {
+    const executePostgresQuery = async (
+      userSQL: string,
+      preSQL: string,
+      postSQL: string
+    ) => {
       const url = "http://localhost:5000/postgres/query";
-      const body = { userSQL, testSQL };
+      const body = { userSQL, preSQL, postSQL };
 
       try {
-        const result = await axios.post(url, body);
-        return result;
+        return axios.post(url, body);
       } catch (err) {
         // Fail by default if error
         console.log(err);
@@ -36,7 +39,7 @@ describe("Example Database Challenge Test", () => {
     const TEST_SQL = "SELECT * FROM users";
 
     // Send the queries to the Database Query API:
-    const result = await executePostgresQuery(SQL, TEST_SQL);
+    const result = await executePostgresQuery(SQL, "", TEST_SQL);
 
     // Perform test assertions:
     const first = result?.data.rows[0];
@@ -60,8 +63,7 @@ describe("Example Database Challenge Test", () => {
       const body = { args };
 
       try {
-        const result = await axios.post(url, body);
-        return result;
+        return axios.post(url, body);
       } catch (err) {
         // Fail by default if error
         console.log(err);

@@ -43,14 +43,22 @@ export const setupPostgres = async () => {
  * ============================================================================
  */
 
-export const connectPoolAndQuery = async (userSQL: string, testSQL: string) => {
+export const connectPoolAndQuery = async (
+  userSQL: string,
+  preSQL: string,
+  postSQL: string
+) => {
   const pool = new Pool();
   const client = await pool.connect();
   try {
+    if (preSQL) {
+      await client.query(preSQL);
+    }
+
     await client.query("BEGIN");
     await client.query(userSQL);
 
-    const result = await client.query(testSQL);
+    const result = await client.query(postSQL);
 
     // If you wanted to commit the query:
     // await client.query("COMMIT");
