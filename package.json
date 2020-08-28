@@ -19,8 +19,8 @@
     "test:unit": "jest",
     "test:watch": "jest --watch",
     "test": "yarn format && yarn test:unit",
-    "db:up": "docker-compose up -d",
-    "db:down": "docker-compose down"
+    "up": "docker-compose up -d",
+    "down": "docker-compose down"
   },
   "dependencies": {
     "@types/cors": "^2.8.6",

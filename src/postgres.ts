@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(100) UNIQUE NOT NULL
 )`;
 
-export const initializeDatabasePool = async () => {
+export const setupPostgres = async () => {
   console.log("\n-> Starting Postgres setup...");
   const pool = new Pool();
 

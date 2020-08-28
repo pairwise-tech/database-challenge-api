@@ -4,8 +4,8 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { connectPoolAndQuery, initializeDatabasePool } from "./postgres";
-import { getMongoClient } from "./mongodb";
+import { connectPoolAndQuery, setupPostgres } from "./postgres";
+import { setupMongoDB } from "./mongodb";
 
 /** ===========================================================================
  * Setup Server
@@ -80,9 +80,9 @@ app.post("/mongodb/query", async (req: Request, res: Response) => {
 const PORT = process.env.SERVER_PORT || 5000;
 
 (async () => {
-  await initializeDatabasePool();
+  await setupPostgres();
 
-  const mongoClient = getMongoClient();
+  await setupMongoDB();
 
   app.listen(PORT, () => {
     console.log(`\nPairwise HTTP API is running on http://localhost:${PORT}\n`);
