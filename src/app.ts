@@ -35,7 +35,7 @@ app.use(bodyParser.json());
  * Index route.
  */
 app.get("/", (req: Request, res: Response) => {
-  res.send("Pairwise Example HTTP API is online 🎉");
+  res.send("Pairwise Database Test API is online 🎉");
 });
 
 /**
@@ -49,6 +49,7 @@ app.post("/query", async (req: Request, res: Response) => {
   }
 
   try {
+    console.log("-> Executing queries for challenges.");
     const result = await connectPoolAndQuery(userSQL, testSQL);
     res.json(result);
   } catch (err) {
