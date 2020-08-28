@@ -20,10 +20,6 @@ export const setupPostgres = async () => {
   console.log("\n-> Starting Postgres setup...");
   const pool = new Pool();
 
-  pool.on("connect", () => {
-    console.log("-> Connected to Postgres!");
-  });
-
   const query = async (queryText: string, params?: any[]) => {
     try {
       const result = await pool.query(queryText, params);
@@ -58,6 +54,7 @@ export const connectPoolAndQuery = async (userSQL: string, testSQL: string) => {
 
     // If you wanted to commit the query:
     // await client.query("COMMIT");
+
     await client.query("ROLLBACK");
     return result;
   } catch (e) {
