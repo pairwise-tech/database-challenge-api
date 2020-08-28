@@ -60,6 +60,6 @@ const PORT = process.env.SERVER_PORT || 5000;
   await initializeDatabasePool();
 
   app.listen(PORT, () => {
-    console.log(`Pairwise HTTP API is running on http://localhost:${PORT}`);
+    console.log(`\nPairwise HTTP API is running on http://localhost:${PORT}\n`);
   });
 })();
