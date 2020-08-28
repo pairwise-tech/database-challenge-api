@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS users (
 )`;
 
 export const initializeDatabasePool = async () => {
-  console.log("Starting Postgres setup.");
+  console.log("-> Starting Postgres setup.");
   const pool = new Pool();
 
   pool.on("connect", () => {
-    console.log("Connected to Postgres!");
+    console.log("-> Connected to Postgres!");
   });
 
   const query = async (queryText: string, params?: any[]) => {
@@ -35,7 +35,7 @@ export const initializeDatabasePool = async () => {
   await query(dropUserTable);
   await query(createUserTable);
 
-  console.log("Postgres Setup Complete!");
+  console.log("-> Postgres Setup Complete!");
 };
 
 /** ===========================================================================

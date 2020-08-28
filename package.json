@@ -6,6 +6,7 @@
   "private": true,
   "author": "Pairwise Team",
   "scripts": {
+    "setup": "cp sample.env .env",
     "prepare": "yarn gcp-build",
     "gcp-build": "yarn build",
     "build": "rimraf build && tsc",

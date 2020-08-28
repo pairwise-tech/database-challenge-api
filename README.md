@@ -1,16 +1,20 @@
-# Pairwise Example HTTP API
+# Pairwise Database Challenge API
 
-An Express server which exposes an example HTTP API for the Pairwise Async Challenges.
-
-The server exposes simple `GET`, `PUT`, `POST`, and `DELETE` HTTP APIs at the `/api` path. The server is running at: [https://pairwise-example-http-api.appspot.com](https://pairwise-example-http-api.appspot.com).
+An HTTP server equipped to run SQL queries for Pairwise database challenges.
 
 ## Getting Started
 
-Install [NodeJS](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/lang/en/docs/) and run the following:
+Install [NodeJS](https://nodejs.org/en/), [yarn](https://yarnpkg.com/lang/en/docs/), and [Docker](https://www.docker.com/) and run the following:
 
 ```sh
 # Install dependencies
 $ yarn install
+
+# Setup
+$ yarn setup
+
+# Run postgres using docker
+$ yarn pg
 
 # Run the server for development
 $ yarn watch
@@ -32,6 +36,29 @@ $ yarn test:unit
 $ yarn test
 ```
 
+## Challenges
+
+An example challenge test might look like this:
+
+```js
+test("A user named Ryan with email ryan@mail.com should be created.", async () => {
+  // Written in the code editor for the challenge:
+  const SQL =
+    "INSERT INTO users (name, email) VALUES ('Ryan', 'ryan@mail.com');";
+
+  // Our SQL for the test assertion:
+  const TEST_SQL = "SELECT * FROM users";
+
+  // Send the queries to the Database Query API:
+  const result = await runQuery(SQL, TEST_SQL);
+
+  // Perform test assertions:
+  const first = result?.data.rows[0];
+  expect(first.name).toBe("Ryan");
+  expect(first.email).toBe("ryan@mail.com");
+});
+```
+
 ## Deployment
 
-The app is deployed to Google Cloud App Engine using Google Cloud Build when any commits are pushed to the `master` branch.
+**TODO!**
