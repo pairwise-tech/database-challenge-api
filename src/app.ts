@@ -4,7 +4,7 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { setupTables, initializeDatabasePool } from "./db";
+import { connectPoolAndQuery, setupTables, initializeDatabasePool } from "./db";
 
 /** ===========================================================================
  * Types & Config
@@ -13,7 +13,10 @@ import { setupTables, initializeDatabasePool } from "./db";
 
 const { query, pool } = initializeDatabasePool();
 
-setupTables(query);
+(async () => {
+  await setupTables(query);
+  console.log("Postgres Setup Complete.");
+})();
 
 /** ===========================================================================
  * Setup Server
@@ -39,14 +42,14 @@ app.get("/", (req: Request, res: Response) => {
  * POST query
  */
 app.post("/query", async (req: Request, res: Response) => {
-  const { sql } = req.body;
-  if (!sql) {
+  const { userSQL, testSQL } = req.body;
+  if (!userSQL || !testSQL) {
     res.status(400);
-    res.send("Must provide a sql query field in the JSON POST body.");
+    res.send("Invalid body provided.");
   }
 
   try {
-    const result = await query(sql);
+    const result = await connectPoolAndQuery(userSQL, testSQL);
     res.json(result);
   } catch (err) {
     res.status(400);
