@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import { connectPoolAndQuery, setupPostgres } from "./postgres";
 import { setupMongoDB, handleUsersQuery } from "./mongodb";
 import { POSTGRES_LOCK, wait, MONGO_LOCK } from "./utils";
-import { PORT } from "./env";
+import { PORT, NODE_ENV } from "./env";
 
 /** ===========================================================================
  * Setup Server & API Endpoints
@@ -116,8 +116,12 @@ app.post("/mongodb/query", async (req: Request, res: Response) => {
 
   // Start the server
   app.listen(PORT, () => {
-    console.log(
-      `✨ Pairwise Database Challenge API is running on http://localhost:${PORT} ✨\n`
-    );
+    if (NODE_ENV === "production") {
+      console.log(`✨ Pairwise Database Challenge API is running! ✨\n`);
+    } else {
+      console.log(
+        `✨ Pairwise Database Challenge API is running on http://localhost:${PORT} ✨\n`
+      );
+    }
   });
 })();

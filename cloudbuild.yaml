@@ -13,6 +13,7 @@ steps:
     # I could find for passing environment variables into the App Engine
     # Runtime environment... >_<
     env:
+      - "NODE_ENV=production"
       - "PGPORT=${_PGPORT}"
       - "PGHOST=${_PGHOST}"
       - "PGUSER=${_PGUSER}"

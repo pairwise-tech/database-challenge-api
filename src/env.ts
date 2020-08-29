@@ -8,4 +8,5 @@ dotenv.config();
  */
 
 export const PORT = getenv.int("PORT", 5000);
+export const NODE_ENV = getenv.string("NODE_ENV");
 export const MONGO_DATABASE_URL = getenv.string("MONGO_DATABASE_URL");
