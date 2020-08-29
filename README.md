@@ -38,4 +38,4 @@ $ yarn test
 
 ## Deployment
 
-This project is deployed using Google Cloud Run.
+This project is deployed using GCP Cloud Build triggers to Google App Engine: [check it out live](https://database-challenge-api.uc.r.appspot.com/).
