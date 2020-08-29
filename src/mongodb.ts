@@ -10,11 +10,9 @@ import { MongoClient } from "mongodb";
 export const setupMongoDB = async () => {
   console.log("\n-> Connecting to MongoDB Client...");
 
-  const user = process.env.MONGO_USER;
-  const password = process.env.MONGO_PASSWORD;
-  const url = `mongodb://${user}:${password}@localhost:27017/test?authSource=admin`;
+  const MONGO_DATABASE_URL = process.env.MONGO_DATABASE_URL || "";
   const options = { useUnifiedTopology: true };
-  const client = await MongoClient.connect(url, options);
+  const client = await MongoClient.connect(MONGO_DATABASE_URL, options);
 
   console.log("-> Connected to MongoDB Client!\n");
   return client;
@@ -33,7 +31,7 @@ export const setupMongoDB = async () => {
 
 export const handleUsersQuery = async (client: MongoClient, args: any) => {
   // Get the users collection
-  const users = client.db("test").collection("user");
+  const users = client.db("test").collection("users");
 
   await users.insertOne(args);
   const result = users.findOne({ name: args.name });
