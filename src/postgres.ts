@@ -43,6 +43,21 @@ export const setupPostgres = async () => {
  * ============================================================================
  */
 
+/**
+ *
+ * SQL will be executed as follows:
+ *
+ * 1. preSQL is run (if provided).
+ * 2. userSQL is run.
+ * 3. postSQL is run and the result is saved.
+ * 4. The transaction is rolled back to avoid any state changes.
+ * 5. Saved result from Step 3 is returned.
+ *
+ * The result from Step 3 above is basically taking a snapshot of the
+ * database state after the user's SQL code runs which allows us to
+ * determine if the user's code was effective or not. This result is
+ * sent back to the Workspace where the test assertions are performed.
+ */
 export const connectPoolAndQuery = async (
   userSQL: string,
   preSQL: string,
