@@ -7,6 +7,16 @@ steps:
     args: ["test"]
   - name: node
     entrypoint: yarn
+    args: ["run", "create-production-env"]
+    env:
+      - "PGPORT=${_PGPORT}"
+      - "PGHOST=${_PGHOST}"
+      - "PGUSER=${_PGUSER}"
+      - "PGPASSWORD=${_PGPASSWORD}"
+      - "PGDATABASE=${_PGDATABASE}"
+      - "MONGO_DATABASE_URL=${_MONGO_DATABASE_URL}"
+  - name: node
+    entrypoint: yarn
     args: ["build"]
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]

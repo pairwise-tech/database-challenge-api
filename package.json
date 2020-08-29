@@ -20,7 +20,8 @@
     "test:watch": "jest --watch",
     "test": "yarn format && yarn test:unit",
     "up": "docker-compose up -d",
-    "down": "docker-compose down"
+    "down": "docker-compose down",
+    "create-production-env": "printenv > .env"
   },
   "dependencies": {
     "@types/cors": "^2.8.6",
