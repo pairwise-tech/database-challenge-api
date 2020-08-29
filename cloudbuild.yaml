@@ -8,6 +8,10 @@ steps:
   - name: node
     entrypoint: yarn
     args: ["run", "create-production-env"]
+    # Read environment variables from build environment and then write them
+    # to a .env file for the production runtime... this is the best workaround
+    # I could find for passing environment variables into the App Engine
+    # Runtime environment... >_<
     env:
       - "PGPORT=${_PGPORT}"
       - "PGHOST=${_PGHOST}"
