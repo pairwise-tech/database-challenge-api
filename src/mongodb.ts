@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import { MONGO_DATABASE_URL } from "./env";
 
 /** ===========================================================================
  * Database Setup
@@ -10,7 +11,6 @@ import { MongoClient } from "mongodb";
 export const setupMongoDB = async () => {
   console.log("\n-> Connecting to MongoDB Client...");
 
-  const MONGO_DATABASE_URL = process.env.MONGO_DATABASE_URL || "";
   const options = { useUnifiedTopology: true };
   const client = await MongoClient.connect(MONGO_DATABASE_URL, options);
 

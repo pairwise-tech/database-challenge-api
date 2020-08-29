@@ -1,12 +1,10 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { connectPoolAndQuery, setupPostgres } from "./postgres";
 import { setupMongoDB, handleUsersQuery } from "./mongodb";
 import { POSTGRES_LOCK, wait, MONGO_LOCK } from "./utils";
+import { PORT } from "./env";
 
 /** ===========================================================================
  * Setup Server & API Endpoints
@@ -105,8 +103,6 @@ app.post("/mongodb/query", async (req: Request, res: Response) => {
  * Run the Server
  * ============================================================================
  */
-
-const PORT = process.env.SERVER_PORT || 5000;
 
 (async () => {
   // Setup Postgres Connection
