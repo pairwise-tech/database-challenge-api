@@ -38,4 +38,4 @@ $ yarn test
 
 ## Deployment
 
-This project is deployed using GCP Cloud Build triggers to Google App Engine: [check it out live](https://database-challenge-api.uc.r.appspot.com/).
+This project is deployed using GCP Cloud Build triggers to Google App Engine: [check it out live](https://database-challenge-api.uc.r.appspot.com/). It connects to a Postgres database hosted on Cloud SQL and a MongoDB database hosted on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
