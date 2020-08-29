@@ -1,18 +1,11 @@
 import axios from "axios";
 
 /**
- * Add unit tests here.
+ * Test the Database Challenge API.
+ *
+ * This requires the server and databases to be running
  */
-describe.skip("Placeholder test suite...", () => {
-  test("Placeholder test...", () => {
-    expect(true).toBe(true);
-  });
-});
-
-/**
- * Example test for a database challenge.
- */
-describe("Example Database Challenge Test", () => {
+describe.skip("Database Challenge API Test", () => {
   test("A user named Ryan with email ryan@mail.com should be created using a SQL INSERT INTO statement.", async () => {
     const executePostgresQuery = async (
       userSQL: string,
