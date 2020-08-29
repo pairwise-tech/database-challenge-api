@@ -38,4 +38,4 @@ $ yarn test
 
 ## Deployment
 
-**TODO!**
+This project is deployed using Google Cloud Run.
