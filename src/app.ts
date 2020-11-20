@@ -33,9 +33,11 @@ app.get("/", (req: Request, res: Response) => {
  * back transactions to leave the database unchanged.
  */
 app.post("/postgres/query", async (req: Request, res: Response) => {
-  const { userSQL, preSQL, postSQL } = req.body;
-  if (!userSQL) {
-    return res.status(400).send("Invalid body provided.");
+  const { preQuery, userQuery, postQuery } = req.body;
+  if (!userQuery) {
+    return res
+      .status(400)
+      .send("The userQuery provided in body is empty or invalid.");
   }
 
   /**
@@ -50,7 +52,7 @@ app.post("/postgres/query", async (req: Request, res: Response) => {
       }
 
       POSTGRES_LOCK.lock();
-      const result = await connectPoolAndQuery(userSQL, preSQL, postSQL);
+      const result = await connectPoolAndQuery(preQuery, userQuery, postQuery);
       POSTGRES_LOCK.unlock();
       return res.json(result);
     } catch (err) {

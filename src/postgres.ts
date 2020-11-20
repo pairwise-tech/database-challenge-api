@@ -12,8 +12,12 @@ const dropUserTable = `DROP TABLE IF EXISTS users`;
 const createUserTable = `
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
+  uuid NOT NULL DEFAULT uuid_generate_v4(),
   name VARCHAR(100),
-  email VARCHAR(100) UNIQUE NOT NULL
+  username VARCHAR(100),
+  email VARCHAR(100) UNIQUE NOT NULL,
+  createdAt TIMESTAMP NOT NULL DEFAULT now(),
+  updatedAt TIMESTAMP NOT NULL DEFAULT now()
 )`;
 
 export const setupPostgres = async () => {
@@ -59,21 +63,21 @@ export const setupPostgres = async () => {
  * sent back to the Workspace where the test assertions are performed.
  */
 export const connectPoolAndQuery = async (
-  userSQL: string,
-  preSQL: string,
-  postSQL: string
+  preQuery: string,
+  userQuery: string,
+  postQuery: string
 ) => {
   const pool = new Pool();
   const client = await pool.connect();
   try {
-    if (preSQL) {
-      await client.query(preSQL);
+    if (preQuery) {
+      await client.query(preQuery);
     }
 
     await client.query("BEGIN");
-    await client.query(userSQL);
+    await client.query(userQuery);
 
-    const result = await client.query(postSQL);
+    const result = await client.query(postQuery);
 
     // If you wanted to commit the query:
     // await client.query("COMMIT");
