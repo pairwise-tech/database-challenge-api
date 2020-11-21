@@ -15,9 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   uuid NOT NULL DEFAULT uuid_generate_v4(),
   name VARCHAR(100),
   username VARCHAR(100),
-  email VARCHAR(100) UNIQUE NOT NULL,
-  createdAt TIMESTAMP NOT NULL DEFAULT now(),
-  updatedAt TIMESTAMP NOT NULL DEFAULT now()
+  email VARCHAR(100) UNIQUE NOT NULL
 )`;
 
 export const setupPostgres = async () => {
