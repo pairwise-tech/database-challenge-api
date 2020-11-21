@@ -27,8 +27,8 @@ export const setupPostgres = async () => {
       const result = await pool.query(queryText, params);
       return result;
     } catch (err) {
-      console.log(err);
-      return null;
+      console.log("Failed to run setupPostgres Query, error: ", err);
+      throw err;
     }
   };
 
