@@ -12,10 +12,10 @@ const dropUserTable = `DROP TABLE IF EXISTS users`;
 const createUserTable = `
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  uuid NOT NULL DEFAULT uuid_generate_v4(),
   name VARCHAR(100),
   username VARCHAR(100),
-  email VARCHAR(100) UNIQUE NOT NULL
+  email VARCHAR(100) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`;
 
 export const setupPostgres = async () => {

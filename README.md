@@ -18,7 +18,11 @@ $ yarn up
 
 # Run the server for development
 $ yarn watch
+```
 
+This will run the databases locally for development using Docker Compose and run the server in watch mode. To build the project, you can run:
+
+```sh
 # Run the build
 $ yarn build
 ```
