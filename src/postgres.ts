@@ -11,7 +11,7 @@ const dropUserTable = `DROP TABLE IF EXISTS users`;
 
 const createUserTable = `
 CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name VARCHAR(100),
   username VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
