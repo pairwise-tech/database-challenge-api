@@ -21,7 +21,9 @@
     "test": "yarn format && yarn test:unit",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
-    "create-production-env": "printenv > .env"
+    "create-production-env": "printenv > .env",
+    "fetch-movies": "node build/tools/fetchMovies.js && yarn copy-movies",
+    "copy-movies": "cp build/data/movies_source.json src/data/movies_source.json && cp build/data/movies_target.json src/data/movies_target.json"
   },
   "dependencies": {
     "@types/cors": "^2.8.6",

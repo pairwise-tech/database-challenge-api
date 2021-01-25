@@ -18,6 +18,19 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`;
 
+const createMovieTable = `
+CREATE TABLE IF NOT EXISTS movie (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title VARCHAR(100) UNIQUE NOT NULL,
+  writer VARCHAR(255) NOT NULL,
+  director VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  genre VARCHAR(100), --intentionally nullable
+  rated VARCHAR(10) NOT NULL,
+  rotten_tomatoes_score DECIMAL(3),
+  runtime_min INT --intentionally nullable
+)`;
+
 export const setupPostgres = async () => {
   console.log("\n-> Starting Postgres setup...");
   const pool = new Pool();
