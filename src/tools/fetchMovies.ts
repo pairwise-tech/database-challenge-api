@@ -1,12 +1,12 @@
 import moviesSource from "../data/movies_source.json";
-import moviesTarget from "../data/movies_target.json";
+import moviesTarget from "../data/movies.json";
 import { writeFileSync } from "fs";
 import { string } from "getenv";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-interface IRating {
+export interface IRating {
   Source: string;
   Value: string;
 }
@@ -37,70 +37,73 @@ interface IOmdbResponse {
   Production: string;
   Website: string;
   Response: string;
+  Error?: string;
 }
 
-interface IPairwiseMovie {
-  title: string;
-  writer: string;
-  director: string;
-  year: number;
-  genre: string;
-  rated: string;
-  rotten_tomatoes_rating: number | null;
-  runtime_min: number;
-}
-
-const iterations = 10;
+const iterations = 176;
 const apiKey = string("OMDB_API_KEY");
 const OMDB_BASE_URL = `http://www.omdbapi.com/?apikey=${apiKey}`;
-
-const getRottenTomatoesRating = (ratings: IRating[]) => {
-  const rating = ratings.find((x) => x.Source === "Rotten Tomatoes")?.Value;
-  return rating ? parseInt(rating) : null;
-};
 
 const fetchMovieData = async () => {
   let i = 0;
 
-  for (const movie of moviesSource) {
-    if (i === iterations) break;
+  const moviesLeft = moviesSource.filter(({ fetched }) => !fetched).length;
 
-    if (!movie.fetched) {
-      const queryString = `${OMDB_BASE_URL}&i=${movie.imdb}`;
-      const { data } = await axios.get<IOmdbResponse>(queryString);
-
-      const newMovie: IPairwiseMovie = {
-        title: data.Title,
-        writer: data.Writer,
-        director: data.Director,
-        year: data.Year,
-        genre: data.Genre.split(",")[0],
-        rated: data.Rated,
-        rotten_tomatoes_rating: getRottenTomatoesRating(data.Ratings),
-        runtime_min: parseInt(data.Runtime),
-      };
-
-      // @ts-ignore
-      moviesTarget.push(newMovie);
-      movie.fetched = true;
-      i++;
-    }
+  if (moviesLeft === 0) {
+    console.log(`[FetchMovies] All movies have been fetched.`);
+    return;
   }
 
-  // sort source by un-fetched so we're more efficient on the next run
-  moviesSource.sort((a, b) => (!a.fetched ? -1 : 1));
+  console.log(`[FetchMovies] ${moviesLeft} movies left to fetch.`);
+  console.log(`[FetchMovies] ${moviesTarget.length} movies already fetched.`);
 
-  // write fetched movies to file.
-  writeFileSync(
-    __dirname + "/../data/movies_target.json",
-    JSON.stringify(moviesTarget, null, 2)
-  );
+  try {
+    for (const movie of moviesSource) {
+      if (i === iterations) break;
 
-  // write updated movies source to file
-  writeFileSync(
-    __dirname + "/../data/movies_source.json",
-    JSON.stringify(moviesSource, null, 2)
-  );
+      if (!movie.fetched) {
+        const queryString = `${OMDB_BASE_URL}&i=${movie.imdb}`;
+        const { data } = await axios.get<IOmdbResponse>(queryString);
+
+        if (data.Response === "True") {
+          // @ts-ignore
+          moviesTarget.push(data);
+          movie.fetched = true;
+          i++;
+
+          console.log(
+            `[FetchMovies] ${i} movie(s) fetched so far. Just fetched: ${movie.title}`
+          );
+        } else {
+          throw new Error(
+            data.Error + ` For Title: ${movie.title} (${movie.imdb})`
+          );
+        }
+      }
+    }
+
+    console.log(`[FetchMovies] Fetched ${i} movies. Updating JSON files.`);
+  } catch (e) {
+    console.error(`[FetchMovies] ${e}`);
+    console.error(
+      `[FetchMovies] Error while fetching movies, aborting and updating JSON files.`
+    );
+  } finally {
+    // sort source by un-fetched so we're more efficient on the next run
+    moviesSource.sort((a, b) => (!a.fetched ? -1 : 1));
+
+    // write fetched movies to file.
+    writeFileSync(
+      __dirname + "/../data/movies.json",
+      JSON.stringify(moviesTarget, null, 2)
+    );
+
+    // write updated movies source to file
+    writeFileSync(
+      __dirname + "/../data/movies_source.json",
+      JSON.stringify(moviesSource, null, 2)
+    );
+  }
 };
 
 fetchMovieData();
