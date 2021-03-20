@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import getMoviesSql from "./tools/getMoviesSql";
 
 /** ===========================================================================
  * Database Setup
@@ -7,16 +8,34 @@ import { Pool } from "pg";
  * ============================================================================
  */
 
+// User Table Setup
 const dropUserTable = `DROP TABLE IF EXISTS users`;
 
 const createUserTable = `
 CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name VARCHAR(100),
   username VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`;
+
+const dropMovieTable = `DROP TABLE IF EXISTS movie`;
+
+const createMovieTable = `
+CREATE TABLE IF NOT EXISTS movie (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  writer VARCHAR NOT NULL,
+  director VARCHAR NOT NULL,
+  year VARCHAR(4),
+  genre VARCHAR(100),
+  rated VARCHAR(10) NOT NULL,
+  rotten_tomatoes_rating DECIMAL(3),
+  runtime_min INT
+)`;
+
+const populateMovieTable = getMoviesSql();
 
 export const setupPostgres = async () => {
   console.log("\n-> Starting Postgres setup...");
@@ -34,6 +53,10 @@ export const setupPostgres = async () => {
 
   await query(dropUserTable);
   await query(createUserTable);
+
+  await query(dropMovieTable);
+  await query(createMovieTable);
+  await query(populateMovieTable);
 
   console.log("-> Postgres Setup Complete!");
 };
