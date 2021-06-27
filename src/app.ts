@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import { connectPoolAndQuery, setupPostgres } from "./postgres";
 import { setupMongoDB, handleUsersQuery } from "./mongodb";
 import { POSTGRES_LOCK, wait, MONGO_LOCK } from "./utils";
@@ -13,11 +12,10 @@ import { PORT, NODE_ENV } from "./env";
 
 const app = express();
 
-// Enable cors
+// Server config
 app.use(cors());
-
-// Enable parsing body
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 /**
  * Index route.
